@@ -22,11 +22,11 @@ function makeCards({id, name, description, rating, img}){
                 <div class="card-body">
                     <h5 class="card-title">${name}</h5>
                     <p class="card-text">${description}</p>
-                    <span>${rating}</span>
+                    <span>${rating.avg_rating}</span>
                 </div>
             </div>
         </div>`;
 }
 renderMoviesList().then(function(response) {
-    $('movie-list').html(response)
+    $('#movie-list').html(response)
 })
