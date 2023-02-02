@@ -6,3 +6,8 @@
     max-width: 200px;
     height: 350px;
 }
+
+.input-labels {
+    width: 100px;
+    justify-content: center;
+}
