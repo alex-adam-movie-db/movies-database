@@ -20,6 +20,19 @@
 </nav>
 <section class="container-fluid mt-5">
 	<div id="movie-list" class="border border-5">
+		<div id="carouselExampleControls" class="carousel bg-dark slide" data-bs-interval="false">
+			<div class="carousel-inner" id="movie-list-content"></div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+			        data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+			        data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
 	</div>
 	<hr>
 	<div class="container-fluid d-flex justify-content-center">
@@ -47,7 +60,7 @@
 			</form>
 			<button id="create-movie-btn" type="button" class="btn btn-dark mt-3">Submit</button>
 		</div>
-		<div id="edit-movie" class="w-50 px-3">
+		<div id="edit-movie" class="d-none w-50 px-3">
 			<form id="edit-movie-form" class="">
 				<h3>Edit Movie</h3>
 				<div class="input-group mb-3">
@@ -74,10 +87,13 @@
 	</div>
 </section>
 
-<footer id="footer" style="margin-top: 150px;" class="d-flex bg-dark flex-wrap justify-content-between align-items-center py-3 border-top">
+<footer id="footer" style="margin-top: 150px;"
+        class="d-flex bg-dark flex-wrap justify-content-between align-items-center py-3 border-top">
 	<div class="col-md-4 d-flex align-items-center">
 		<a href="/" class="mb-3 me-2 mb-md-0 text-light text-decoration-none lh-1">
-			<svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+			<svg class="bi" width="30" height="24">
+				<use xlink:href="#bootstrap"></use>
+			</svg>
 		</a>
 		<span class="text-light">© 2023 <a href="#"><i class="fa-sharp fa-solid fa-sun text-white"></i></a> Movie Searcher</span>
 	</div>
