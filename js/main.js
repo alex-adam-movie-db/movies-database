@@ -1,18 +1,18 @@
 'use strict';
 
-let url = 'https://exciting-troubled-ring.glitch.me/movies';
-
-let movies = ''
+const url = 'https://exciting-troubled-ring.glitch.me/movies';
+let movies = [];
+let editingCardId = null;
 
 function fetchMovies () {
-    return fetch('https://exciting-troubled-ring.glitch.me/movies')
+    return fetch(url)
         .then(response => response.json())
         .then(data => data);
 }
 
-async function renderMoviesList () {
+async function buildMovieCarouselHTML () {
     movies = await fetchMovies();
-    let html = '<div id="carouselExampleControls" class="carousel bg-dark slide" data-bs-interval="false"><div class="carousel-inner">';
+    let html = '';
     for (let i = 0; i < movies.length; i++) {
         if(i === 0){
             html += `<div class="carousel-item active "><div class="d-flex justify-content-around align-items-center movie-carousels">`
@@ -22,27 +22,12 @@ async function renderMoviesList () {
         }
         html += makeCards(movies[i]);
     }
-    html += `</div></div></div><button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>`
-    $('.edit-movie').each( function(){
-        $(this).click(function() {
-            $('#edit-movie').toggleClass('d-none')
-            // fillForm();
-            console.log('hello')
-        });
-    });
+    // html += ``
     return html;
 }
 
 function makeCards({id, name, description, rating, img}){
-    return `<div data-id="${id}" class="">
+    return `<div data-id="${id}" class="movie-card-container">
             <div class="card movie-card">
                 <a href="https://placeholder.com"><img src="https://via.placeholder.com/200" class="card-img-top"></a>
                 <div class="card-body">
@@ -55,60 +40,49 @@ function makeCards({id, name, description, rating, img}){
         </div>`;
 }
 
-$('#movie-search-form').submit(e => e.preventDefault());
+function fillForm() {
 
-renderMoviesList().then(function(response) {
-    $('#movie-list').html(response)
-});
+}
 
-$('#create-movie-btn').click(function () {
-    addMovie();
-    $('#add-movie-name').val('')
-    $('#add-movie-description').val('')
-    $('#select-movie-rating').val('')
-})
-
-function addMovie () {
-    let movieName = $('#add-movie-name').val()
-    if(movieName === ''){
-        return alert('Insert Movie Name')
-    }
-    let movieDescription = $('#add-movie-description').val()
-    let movieRating = $('#select-movie-rating').val()
-    let filteredArray = movies.filter(function(movie) {
-        return movie.name === movieName
-    })
-    if (filteredArray.length !== 0){
-        return alert('Duplicate Movie Name')
-    }
-    fetch(url, {
-        method: 'POST',
+function sendToMoviesDatabase(name, description, rating, method) {
+    return fetch(url, {
+        method: method,
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            name: movieName,
-            description: movieDescription,
-            rating: movieRating
+            name: name,
+            description: description,
+            rating: rating
         })
-    }).then(function () {
-        return renderMoviesList();
-    }).then(function(data) {
-        $('#movie-list').html(data)
-    });
+    })
+    //     .then(function () {
+    //     return buildMovieCarouselHTML();
+    // }).then(function (data) {
+    //     $('#movie-list').html(data)
+    // });
 }
 
-$('#edit-movie-btn').click(function () {
-    editMovie();
-    $('#edit-movie-name').val('')
-    $('#edit-movie-description').val('')
-    $('#edit-movie-rating').val('')
-})
-function editMovie () {
-    let movieName = $('#edit-movie-name').val()
-    if(movieName === ''){
+async function addMovie () {
+    let movieName = $('#add-movie-name').val()
+    let movieDescription = $('#add-movie-description').val()
+    let movieRating = $('#select-movie-rating').val()
+    // let filteredArray = movies.filter(movie => movie.name === movieName)
+    if (movieName === ''){
         return alert('Insert Movie Name')
     }
+    if (movies.filter(movie => movie.name === movieName).length !== 0){
+        return alert('Duplicate Movie Name')
+    }
+    await sendToMoviesDatabase(movieName, movieDescription, movieRating, 'POST');
+    refreshAndRenderMovieList();
+}
+
+async function editMovie () {
+    let movieName = $('#edit-movie-name').val()
+    // if(movieName === ''){
+    //     return alert('Insert Movie Name')
+    // }
     let movieDescription = $('#edit-movie-description').val()
     let movieRating = $('#edit-movie-rating').val()
     // let filteredArray = movies.filter(function(movie) {
@@ -117,19 +91,43 @@ function editMovie () {
     // if (filteredArray.length !== 0){
     //     return alert('Duplicate Movie Name')
     // }
-    fetch(url, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: movieName,
-            description: movieDescription,
-            rating: movieRating
-        })
-    }).then(function () {
-        return renderMoviesList();
-    }).then(function(data) {
-        $('#movie-list').html(data)
+    await sendToMoviesDatabase(movieName, movieDescription, movieRating, 'PATCH');
+    refreshAndRenderMovieList();
+}
+
+function refreshAndRenderMovieList() {
+    buildMovieCarouselHTML()
+        .then(function (response) {
+        $('#movie-list-content').html(response)
+        $('.edit-movie').each(function () {
+            $(this).click(function () {
+                if (editingCardId === null) {
+                    $('#edit-movie').toggleClass('d-none');
+                } else if (editingCardId === $(this).closest('div.movie-card-container').attr('data-id')) {
+                    editingCardId = null;
+                    $('#edit-movie').toggleClass('d-none');
+                    return
+                }
+                editingCardId = $(this).closest('div.movie-card-container').attr('data-id');
+                // $('#edit-movie').toggleClass('d-none');
+                fillForm();
+            });
+        });
     });
 }
+
+$('#movie-search-form').submit(e => e.preventDefault());
+$('#create-movie-btn').click(async function () {
+    await addMovie();
+    $('#add-movie-name').val('')
+    $('#add-movie-description').val('')
+    $('#select-movie-rating').val('')
+})
+$('#edit-movie-btn').click(async function () {
+    await editMovie();
+    $('#edit-movie-name').val('')
+    $('#edit-movie-description').val('')
+    $('#edit-movie-rating').val('')
+})
+
+refreshAndRenderMovieList();
