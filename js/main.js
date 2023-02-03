@@ -189,7 +189,6 @@ function refreshAndRenderMovieList() {
     });
 }
 
-$('#movie-search-form').submit(e => e.preventDefault());
 $('#create-movie-btn').click(async function () {
     if (movies.length % 4 === 0) {
         carouselId = movies.length
@@ -208,5 +207,20 @@ $('#edit-movie-btn').click(async function () {
     // $('#edit-movie-description').val('')
     // $('#edit-movie-rating').val('')
 })
+
+function findCard(search) {
+    let matchedSearches = movies.filter(function (movie) {
+        return movie.name.includes(search)
+    });
+    let matchSearch = matchedSearches[0].id
+    $('.active').removeClass('active')
+    $(`[data-id='${matchSearch}']`).parent().parent().addClass('active')
+}
+
+$('#movie-search-form').submit(function (e) {
+    e.preventDefault();
+    let search = $('#movie-search-bar').val()
+    findCard(search);
+});
 
 refreshAndRenderMovieList();
