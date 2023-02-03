@@ -10,8 +10,16 @@ let carouselId = 0;
 
 function fetchMoviePoster(search) {
 	return fetch(movieDBUrl + "/search/movie?api_key=" + MOVIE_DB_API_KEY + "&query=" + encodeURIComponent(search))
-		.then(res => res.json())
-		.then(data => data.results[0].poster_path);
+		.then(function (res) {
+			if (res.ok) {
+				return res.json()
+			} else {
+				return Promise.reject()
+			}
+		})
+		.then(data => data.results[0].poster_path).catch(function (error) {
+			console.log(error)
+		});
 }
 
 function fetchMovies() {
@@ -47,14 +55,17 @@ async function buildMovieCarouselHTML() {
 
 async function makeCards({id, name, description, rating, img}) {
 	let moviePosterUrl = await fetchMoviePoster(name);
+	if(moviePosterUrl === undefined){
+	moviePosterUrl = '/ljIwC5VyEu97IsE58MTQzoUOlhq.jpg'
+	}
 	return `<div data-id="${id}" class="movie-card-container text-light">
             <div class="card movie-card">
                 <img src="${movieImageBaseUrl + moviePosterUrl}" class="card-img">
                 <div class="card-img-overlay bg-dark bg-opacity-50 d-none">
                 <button class="position-absolute btn-danger btn btn-delete " style="font-size: 12px; top: 0px; right: 5px;"><i class="fa-solid fa-x"></i></button>
                 <button class="edit-movie btn-dark btn position-absolute" style="bottom: 0px; right: 0px;">Edit</button>
+                    <p class="card-text text-wrap py-5" style="height: 70%;">${description}</p>
                     <h5 class="card-title text-wrap text-center">${name}</h5>
-                    <p class="card-text text-wrap">${description}</p>
                     <span>Average Rating: ${rating}</span>
                 </div>
             </div>
@@ -172,8 +183,15 @@ function refreshAndRenderMovieList() {
 			});
 			$('.btn-delete').each(function () {
 				$(this).click(function () {
-					deleteMovie($(this).closest('div.movie-card-container').attr('data-id')).then(function () {
-						if (movies.length % 4 === 1 && $('#movie-list-content').children().last().hasClass('active')) {
+					let datumId = $(this).closest('div.movie-card-container').attr('data-id')
+					deleteMovie(datumId).then(function () {
+						if(editingCardId === parseInt(datumId) && !($('#edit-movie').hasClass('d-none'))){
+							$('#edit-movie').toggleClass('d-none');
+							editingCardId = null;
+						}
+						if(movies.length === 1){
+							$('#movie-list').toggleClass('d-none')
+						} else if (movies.length % 4 === 1 && $('#movie-list-content').children().last().hasClass('active')) {
 							carouselId = parseInt($('.active').first().attr('data-carousel-id')) - 4
 						} else {
 							carouselId = parseInt($('.active').first().attr('data-carousel-id'))
@@ -198,6 +216,13 @@ function refreshAndRenderMovieList() {
 	});
 }
 
+$('#add-movie-form').submit(function(e){
+	e.preventDefault();
+});
+$('#edit-movie-form').submit(function(e){
+	e.preventDefault();
+});
+
 $('#create-movie-btn').click(async function () {
 	if (movies.length % 4 === 0) {
 		carouselId = movies.length
@@ -205,6 +230,9 @@ $('#create-movie-btn').click(async function () {
 		carouselId = Math.floor(movies.length / 4) * 4
 	}
 	await addMovie();
+	if($('#movie-list').hasClass('d-none')){
+		$('#movie-list').toggleClass('d-none')
+	}
 	$('#add-movie-name').val('')
 	$('#add-movie-description').val('')
 	$('#select-movie-rating').val('5')
@@ -237,5 +265,4 @@ $('#movie-search-form').submit(function (e) {
 	findCard(search);
 });
 
-fetchMoviePoster("Star Wars: Episode III - Revenge of the Sith");
 refreshAndRenderMovieList();
