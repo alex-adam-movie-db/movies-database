@@ -206,6 +206,11 @@ function findCard(search) {
     let matchedSearches = movies.filter(function (movie) {
         return movie.name.includes(search)
     });
+    if(matchedSearches.length === 0){
+        $('#modal-error-msg').text('No matches for that search.')
+        myModal.show();
+        return
+    }
     let matchSearch = matchedSearches[0].id
     $('.active').removeClass('active')
     $(`[data-id='${matchSearch}']`).parent().parent().addClass('active')
