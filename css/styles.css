@@ -11,3 +11,16 @@
     width: 100px;
     justify-content: center;
 }
+
+#loading {
+    padding: 300px;
+}
+
+.spinner-border {
+    width: 100px;
+}
+
+#error-msg {
+    padding: 200px 0;
+    margin: 0 400px;
+}

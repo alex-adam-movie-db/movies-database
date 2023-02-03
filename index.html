@@ -18,16 +18,24 @@
 		</form>
 	</div>
 </nav>
-<section class="container-fluid mt-5">
+<div id="loading" class="text-center">
+	<div class="spinner-border" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
+</div>
+<div id="error-msg" class=" d-none">
+	<p class="bg-danger text-center fs-1 my-4">Error loading page</p>
+</div>
+<section id="content-main" class="container-fluid mt-5 d-none">
 	<div id="movie-list" class="border border-5">
 		<div id="carouselExampleControls" class="carousel bg-dark slide" data-bs-interval="false">
 			<div class="carousel-inner" id="movie-list-content"></div>
-			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+			<button class="carousel-control-prev" style="width: 10%;" type="button" data-bs-target="#carouselExampleControls"
 			        data-bs-slide="prev">
 				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 				<span class="visually-hidden">Previous</span>
 			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+			<button class="carousel-control-next" type="button" style="width: 10%;" data-bs-target="#carouselExampleControls"
 			        data-bs-slide="next">
 				<span class="carousel-control-next-icon" aria-hidden="true"></span>
 				<span class="visually-hidden">Next</span>
