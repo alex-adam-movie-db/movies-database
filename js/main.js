@@ -1,6 +1,7 @@
 'use strict';
 
 const url = 'https://exciting-troubled-ring.glitch.me/movies';
+const myModal = new bootstrap.Modal(document.getElementById('modal-message'))
 let movies = [];
 let editingCardId = null;
 let carouselId = 0;
@@ -41,7 +42,7 @@ function makeCards({id, name, description, rating, img}) {
     return `<div data-id="${id}" class="movie-card-container">
             <div class="card movie-card">
                 <a href="https://placeholder.com"><img src="https://via.placeholder.com/200" class="card-img-top"></a>
-                <button class="position-absolute btn-danger btn btn-delete" style="width: 8px;font-size: 6px; top: 0px; right: 0px;">X</button>
+                <button class="position-absolute btn-danger btn btn-delete " style="font-size: 12px; top: 0px; right: 5px;"><i class="fa-solid fa-x"></i></button>
                 <div class="card-body">
                     <h5 class="card-title text-wrap text-center">${name}</h5>
                     <p class="card-text text-wrap">${description}</p>
@@ -87,10 +88,12 @@ async function addMovie() {
     let movieRating = $('#select-movie-rating').val()
     // let filteredArray = movies.filter(movie => movie.name === movieName)
     if (movieName === '') {
-        return alert('Insert Movie Name')
+        $('#modal-error-msg').text('Please add Movie Name')
+        return myModal.show();
     }
     if (movies.filter(movie => movie.name === movieName).length !== 0) {
-        return alert('Duplicate Movie Name')
+        $('#modal-error-msg').text('This name already exists')
+        return myModal.show();
     }
     await sendToMoviesDatabase(movieName, movieDescription, movieRating, 'POST').then(function (res) {
         if(res.ok){
@@ -123,17 +126,8 @@ function deleteMovie(id) {
 
 async function editMovie() {
     let movieName = $('#edit-movie-name').val()
-    // if(movieName === ''){
-    //     return alert('Insert Movie Name')
-    // }
     let movieDescription = $('#edit-movie-description').val()
     let movieRating = $('#edit-movie-rating').val()
-    // let filteredArray = movies.filter(function(movie) {
-    //     return movie.name === movieName
-    // })
-    // if (filteredArray.length !== 0){
-    //     return alert('Duplicate Movie Name')
-    // }
     await sendToMoviesDatabase(movieName, movieDescription, movieRating, 'PATCH', editingCardId).then(function (res) {
         if(res.ok){
             refreshAndRenderMovieList();

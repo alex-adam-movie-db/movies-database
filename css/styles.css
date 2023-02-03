@@ -24,3 +24,9 @@
     padding: 200px 0;
     margin: 0 400px;
 }
+
+body {
+    background-image: url("../img/audience.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}

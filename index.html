@@ -27,8 +27,24 @@
 	<p class="bg-danger text-center fs-1 my-4">Error loading page</p>
 </div>
 <section id="content-main" class="container-fluid mt-5 d-none">
-	<div id="movie-list" class="border border-5">
-		<div id="carouselExampleControls" class="carousel bg-dark slide" data-bs-interval="false">
+	<div id="modal-message" class="modal fade" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Error</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p id="modal-error-msg">Page cannot display.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="movie-list" class="border border-2">
+		<div id="carouselExampleControls" class="carousel bg-dark bg-opacity-75 slide" data-bs-interval="false">
 			<div class="carousel-inner" id="movie-list-content"></div>
 			<button class="carousel-control-prev" style="width: 10%;" type="button" data-bs-target="#carouselExampleControls"
 			        data-bs-slide="prev">
@@ -44,9 +60,9 @@
 	</div>
 	<hr>
 	<div class="container-fluid d-flex justify-content-center">
-		<div id="add-movie" class="w-50 px-3">
+		<div id="add-movie" class="p-4 bg-dark bg-opacity-75 mx-3" style="width: 45%;">
 			<form id="add-movie-form" class="">
-				<h3>Add a Movie</h3>
+				<h3 class="text-white">Add a Movie</h3>
 				<div class="input-group mb-3">
 					<span class="input-group-text input-labels">Name</span>
 					<input id="add-movie-name" type="text" class="form-control" placeholder="Name">
@@ -68,9 +84,9 @@
 			</form>
 			<button id="create-movie-btn" type="button" class="btn btn-dark mt-3">Submit</button>
 		</div>
-		<div id="edit-movie" class="d-none w-50 px-3">
+		<div id="edit-movie" class="d-none p-4 bg-dark bg-opacity-75 mx-3" style="width: 45%;">
 			<form id="edit-movie-form" class="">
-				<h3>Edit Movie</h3>
+				<h3 class="text-white">Edit Movie</h3>
 				<div class="input-group mb-3">
 					<span class="input-group-text input-labels">Name</span>
 					<input id="edit-movie-name" type="text" class="form-control" placeholder="Name">
@@ -103,7 +119,7 @@
 				<use xlink:href="#bootstrap"></use>
 			</svg>
 		</a>
-		<span class="text-light">© 2023 <a href="#"><i class="fa-sharp fa-solid fa-sun text-white"></i></a> Movie Searcher</span>
+		<span class="text-light">© 2023 Movie Searcher</span>
 	</div>
 
 	<ul class="nav col-md-4 justify-content-end list-unstyled d-flex align-items-center">
