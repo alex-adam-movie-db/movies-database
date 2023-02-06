@@ -3,10 +3,12 @@
 const url = 'https://exciting-troubled-ring.glitch.me/movies';
 const movieDBUrl = "https://api.themoviedb.org/3";
 const movieImageBaseUrl = "https://image.tmdb.org/t/p/w200";
-const myModal = new bootstrap.Modal(document.getElementById('modal-message'))
+const myModal = new bootstrap.Modal(document.getElementById('modal-message'));
+const moviesPerCarousel = 4;
 let movies = [];
 let editingCardId = null;
 let carouselId = 0;
+
 
 function fetchMoviePoster(search) {
 	return fetch(movieDBUrl + "/search/movie?api_key=" + MOVIE_DB_API_KEY + "&query=" + encodeURIComponent(search))
@@ -44,7 +46,7 @@ async function buildMovieCarouselHTML() {
 		if (i === 0) {
 			html += `<div data-carousel-id="${i}" class="carousel-item ${carouselId === i ? 'active' : ''}"><div class="d-flex justify-content-around align-items-center movie-carousels">`
 		}
-		if (i % 4 === 0 && i !== 0) {
+		if (i % moviesPerCarousel === 0 && i !== 0) {
 			html += `</div></div><div data-carousel-id="${i}" class="carousel-item ${carouselId === i ? 'active' : ''}"><div class="d-flex justify-content-around align-items-center movie-carousels">`
 		}
 		html += await makeCards(movies[i]);
@@ -191,8 +193,8 @@ function refreshAndRenderMovieList() {
 						}
 						if(movies.length === 1){
 							$('#movie-list').toggleClass('d-none')
-						} else if (movies.length % 4 === 1 && $('#movie-list-content').children().last().hasClass('active')) {
-							carouselId = parseInt($('.active').first().attr('data-carousel-id')) - 4
+						} else if (movies.length % moviesPerCarousel === 1 && $('#movie-list-content').children().last().hasClass('active')) {
+							carouselId = parseInt($('.active').first().attr('data-carousel-id')) - moviesPerCarousel
 						} else {
 							carouselId = parseInt($('.active').first().attr('data-carousel-id'))
 						}
@@ -224,10 +226,10 @@ $('#edit-movie-form').submit(function(e){
 });
 
 $('#create-movie-btn').click(async function () {
-	if (movies.length % 4 === 0) {
+	if (movies.length % moviesPerCarousel === 0) {
 		carouselId = movies.length
 	} else {
-		carouselId = Math.floor(movies.length / 4) * 4
+		carouselId = Math.floor(movies.length / moviesPerCarousel) * moviesPerCarousel
 	}
 	await addMovie();
 	if($('#movie-list').hasClass('d-none')){
