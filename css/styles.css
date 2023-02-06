@@ -5,6 +5,7 @@
 .movie-card {
     max-width: 200px;
     height: 300px;
+    border: transparent 2px solid !important;
 }
 
 .input-labels {
@@ -29,4 +30,12 @@ body {
     background-image: url("../img/audience.jpg");
     background-size: cover;
     background-attachment: fixed;
+}
+
+.highlight {
+    border: yellow solid 3px;
+}
+
+:root {
+    --animate-delay: 2s;
 }

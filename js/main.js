@@ -249,7 +249,7 @@ $('#edit-movie-btn').click(async function () {
 
 function findCard(search) {
 	let matchedSearches = movies.filter(function (movie) {
-		return movie.name.includes(search)
+		return movie.name.toLowerCase().includes(search)
 	});
 	if (matchedSearches.length === 0) {
 		$('#modal-error-msg').text('No matches for that search.')
@@ -257,13 +257,20 @@ function findCard(search) {
 		return
 	}
 	let matchSearch = matchedSearches[0].id
+
 	$('.active').removeClass('active')
-	$(`[data-id='${matchSearch}']`).parent().parent().addClass('active')
+	$(`[data-id='${matchSearch}']`).addClass('animate__fadeOut').attr(
+		'style', 'border: yellow solid 3px !important'
+	).parent().parent().addClass('active')
+
+	setTimeout(function() {
+		$(`[data-id='${matchSearch}']`).removeClass('highlight');
+	}, 3000);
 }
 
 $('#movie-search-form').submit(function (e) {
 	e.preventDefault();
-	let search = $('#movie-search-bar').val()
+	let search = $('#movie-search-bar').val().toLowerCase()
 	findCard(search);
 });
 
