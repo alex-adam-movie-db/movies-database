@@ -5,7 +5,11 @@
 .movie-card {
     max-width: 200px;
     height: 300px;
-    border: transparent 2px solid !important;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+    border: transparent 3px solid;
 }
 
 .input-labels {
@@ -18,6 +22,7 @@
 }
 
 .spinner-border {
+    color: whitesmoke;
     width: 100px;
 }
 
@@ -33,7 +38,7 @@ body {
 }
 
 .highlight {
-    border: yellow solid 3px;
+    background-color: yellow !important;
 }
 
 :root {

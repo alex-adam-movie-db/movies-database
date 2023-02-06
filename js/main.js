@@ -218,14 +218,8 @@ function refreshAndRenderMovieList() {
 	});
 }
 
-$('#add-movie-form').submit(function(e){
+$('#add-movie-form').submit(async function (e) {
 	e.preventDefault();
-});
-$('#edit-movie-form').submit(function(e){
-	e.preventDefault();
-});
-
-$('#create-movie-btn').click(async function () {
 	if (movies.length % moviesPerCarousel === 0) {
 		carouselId = movies.length
 	} else {
@@ -239,12 +233,10 @@ $('#create-movie-btn').click(async function () {
 	$('#add-movie-description').val('')
 	$('#select-movie-rating').val('5')
 })
-$('#edit-movie-btn').click(async function () {
+$('#edit-movie-form').submit(async function (e) {
+	e.preventDefault();
 	carouselId = parseInt($('.active').first().attr('data-carousel-id'))
 	await editMovie();
-	// $('#edit-movie-name').val('')
-	// $('#edit-movie-description').val('')
-	// $('#edit-movie-rating').val('')
 })
 
 function findCard(search) {
@@ -259,12 +251,9 @@ function findCard(search) {
 	let matchSearch = matchedSearches[0].id
 
 	$('.active').removeClass('active')
-	$(`[data-id='${matchSearch}']`).addClass('animate__fadeOut').attr(
-		'style', 'border: yellow solid 3px !important'
-	).parent().parent().addClass('active')
-
+	$(`[data-id='${matchSearch}']`).children().first().addClass('highlight').parent().parent().parent().addClass('active')
 	setTimeout(function() {
-		$(`[data-id='${matchSearch}']`).removeClass('highlight');
+		$(`[data-id='${matchSearch}']`).children().first().removeClass('highlight');
 	}, 3000);
 }
 
@@ -272,6 +261,7 @@ $('#movie-search-form').submit(function (e) {
 	e.preventDefault();
 	let search = $('#movie-search-bar').val().toLowerCase()
 	findCard(search);
+	$('#movie-search-bar').val(' ')
 });
 
 refreshAndRenderMovieList();
